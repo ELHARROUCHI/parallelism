@@ -1,0 +1,33 @@
+plugins {
+    id 'com.gradle.build-scan' version '1.8'
+    id 'java'
+}
+
+group 'test.prueba'
+version '0.1'
+
+sourceCompatibility = 11
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'prueba',
+                'Implementation-Version': version,
+                'Main-Class': 'test.prueba.Main'
+    }
+    baseName = project.name
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    with jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
